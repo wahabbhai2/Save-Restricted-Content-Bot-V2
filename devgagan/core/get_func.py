@@ -94,7 +94,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
         # Pyrogram upload
         if upload_method == "Pyrogram":
             if file.split('.')[-1].lower() in video_formats:
-                dm = await app.send_video(caption="Download By Gaurav G\n**Channel-@skillwithgaurav**", 
+                dm = await app.send_video(
                     chat_id=target_chat_id,
                     video=file,
                     caption=caption,
@@ -121,7 +121,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
                 )
                 await dm.copy(LOG_GROUP)
             else:
-                dm = await app.send_document(caption="Download By Gaurav G\n**Channel-@skillwithgaurav**", 
+                dm = await app.send_document(
                     chat_id=target_chat_id,
                     document=file,
                     caption=caption,
@@ -280,7 +280,7 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
         # Rename file
         file = await rename_file(file, sender)
         if msg.audio:
-            result = await app.send_audio(caption="Download By Gaurav G\n**Channel-@skillwithgaurav**", target_chat_id, file, caption=caption, reply_to_message_id=topic_id)
+            result = await app.send_audio(target_chat_id, file, caption=caption, reply_to_message_id=topic_id)
             await result.copy(LOG_GROUP)
             await edit.delete(2)
             os.remove(file)
@@ -402,9 +402,9 @@ async def download_user_stories(userbot, chat_id, msg_id, edit, sender):
         if story.media:
             await edit.edit("Uploading Story...")
             if story.media == MessageMediaType.VIDEO:
-                await app.send_video(caption="Download By Gaurav G\n**Channel-@skillwithgaurav**", sender, file_path)
+                await app.send_video(sender, file_path)
             elif story.media == MessageMediaType.DOCUMENT:
-                await app.send_document(caption="Download By Gaurav G\n**Channel-@skillwithgaurav**", sender, file_path)
+                await app.send_document(sender, file_path)
             elif story.media == MessageMediaType.PHOTO:
                 await app.send_photo(sender, file_path)
         if file_path and os.path.exists(file_path):
@@ -478,7 +478,7 @@ async def copy_message_with_chat_id(app, userbot, sender, chat_id, message_id, e
                     return
                 await upload_media(sender, target_chat_id, file, final_caption, edit, topic_id)
             elif msg.audio:
-                result = await app.send_audio(caption="Download By Gaurav G\n**Channel-@skillwithgaurav**", target_chat_id, file, caption=final_caption, reply_to_message_id=topic_id)
+                result = await app.send_audio(target_chat_id, file, caption=final_caption, reply_to_message_id=topic_id)
             elif msg.voice:
                 result = await app.send_voice(target_chat_id, file, reply_to_message_id=topic_id)
             elif msg.sticker:
@@ -501,9 +501,9 @@ async def copy_message_with_chat_id(app, userbot, sender, chat_id, message_id, e
 async def send_media_message(app, target_chat_id, msg, caption, topic_id):
     try:
         if msg.video:
-            return await app.send_video(caption="Download By Gaurav G\n**Channel-@skillwithgaurav**", target_chat_id, msg.video.file_id, caption=caption, reply_to_message_id=topic_id)
+            return await app.send_video(target_chat_id, msg.video.file_id, caption=caption, reply_to_message_id=topic_id)
         if msg.document:
-            return await app.send_document(caption="Download By Gaurav G\n**Channel-@skillwithgaurav**", target_chat_id, msg.document.file_id, caption=caption, reply_to_message_id=topic_id)
+            return await app.send_document(target_chat_id, msg.document.file_id, caption=caption, reply_to_message_id=topic_id)
         if msg.photo:
             return await app.send_photo(target_chat_id, msg.photo.file_id, caption=caption, reply_to_message_id=topic_id)
     except Exception as e:
@@ -1128,7 +1128,7 @@ async def split_and_upload_file(app, sender, target_chat_id, file_path, caption,
             # Uploading part
             edit = await app.send_message(target_chat_id, f"⬆️ Uploading part {part_number + 1}...")
             part_caption = f"{caption} \n\n**Part : {part_number + 1}**"
-            await app.send_document(caption="Download By Gaurav G\n**Channel-@skillwithgaurav**", target_chat_id, document=part_file, caption=part_caption, reply_to_message_id=topic_id,
+            await app.send_document(target_chat_id, document=part_file, caption=part_caption, reply_to_message_id=topic_id,
                 progress=progress_bar,
                 progress_args=("╭─────────────────────╮\n│      **__Pyro Uploader__**\n├─────────────────────", edit, time.time())
             )
