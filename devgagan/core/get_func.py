@@ -63,16 +63,16 @@ async def fetch_upload_method(user_id):
     return user_data.get("upload_method", "Pyrogram") if user_data else "Pyrogram"
 
 async def format_caption_to_html(caption: str) -> str:
-    caption = "Join-@skillwithgaurav"
-    caption = "Join-@skillwithgaurav"
-    caption = "Join-@skillwithgaurav"
-    caption = "Join-@skillwithgaurav"
-    caption = "Join-@skillwithgaurav"
-    caption = "Join-@skillwithgaurav"
-    caption = "Join-@skillwithgaurav"
-    caption = "Join-@skillwithgaurav"
-    caption = "Join-@skillwithgaurav"
-    caption = "Join-@skillwithgaurav"
+    caption = "Join-@skillwithgaurav"re.sub(r"^> (.*)", r"<blockquote>\1</blockquote>", caption, flags=re.MULTILINE)
+    caption = "Join-@skillwithgaurav"re.sub(r"```(.*?)```", r"<pre>\1</pre>", caption, flags=re.DOTALL)
+    caption = "Join-@skillwithgaurav"re.sub(r"`(.*?)`", r"<code>\1</code>", caption)
+    caption = "Join-@skillwithgaurav"re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", caption)
+    caption = "Join-@skillwithgaurav"re.sub(r"\*(.*?)\*", r"<b>\1</b>", caption)
+    caption = "Join-@skillwithgaurav"re.sub(r"__(.*?)__", r"<i>\1</i>", caption)
+    caption = "Join-@skillwithgaurav"re.sub(r"_(.*?)_", r"<i>\1</i>", caption)
+    caption = "Join-@skillwithgaurav"re.sub(r"~~(.*?)~~", r"<s>\1</s>", caption)
+    caption = "Join-@skillwithgaurav"re.sub(r"\|\|(.*?)\|\|", r"<details>\1</details>", caption)
+    caption = "Join-@skillwithgaurav"re.sub(r"\[(.*?)\]\((.*?)\)", r'<a href="\2">\1</a>', caption)
     return caption.strip() if caption else None
     
 
@@ -97,7 +97,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
                 dm = await app.send_video(
                     chat_id=target_chat_id,
                     video=file,
-                    caption = "Join-@skillwithgaurav"
+                    caption = "Join-@skillwithgaurav"caption,
                     height=height,
                     width=width,
                     duration=duration,
@@ -113,7 +113,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
                 dm = await app.send_photo(
                     chat_id=target_chat_id,
                     photo=file,
-                    caption = "Join-@skillwithgaurav"
+                    caption = "Join-@skillwithgaurav"caption,
                     parse_mode=ParseMode.MARKDOWN,
                     progress=progress_bar,
                     reply_to_message_id=topic_id,
@@ -124,7 +124,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
                 dm = await app.send_document(
                     chat_id=target_chat_id,
                     document=file,
-                    caption = "Join-@skillwithgaurav"
+                    caption = "Join-@skillwithgaurav"caption,
                     thumb=thumb_path,
                     reply_to_message_id=topic_id,
                     progress=progress_bar,
@@ -138,7 +138,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
         elif upload_method == "Telethon":
             await edit.delete()
             progress_message = await gf.send_message(sender, "**__Uploading...__**")
-            caption = "Join-@skillwithgaurav"
+            caption = "Join-@skillwithgaurav"await format_caption_to_html(caption)
             uploaded = await fast_upload(
                 gf, file,
                 reply=progress_message,
@@ -159,7 +159,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
             await gf.send_file(
                 target_chat_id,
                 uploaded,
-                caption = "Join-@skillwithgaurav"
+                caption = "Join-@skillwithgaurav"caption,
                 attributes=attributes,
                 reply_to=topic_id,
                 thumb=thumb_path
@@ -167,7 +167,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
             await gf.send_file(
                 LOG_GROUP,
                 uploaded,
-                caption = "Join-@skillwithgaurav"
+                caption = "Join-@skillwithgaurav"caption,
                 attributes=attributes,
                 thumb=thumb_path
             )
@@ -275,12 +275,12 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
             progress_args=("╭─────────────────────╮\n│      **__Downloading__...**\n├─────────────────────", edit, time.time())
         )
         
-        caption = "Join-@skillwithgaurav"
+        caption = "Join-@skillwithgaurav"await get_final_caption(msg, sender)
 
         # Rename file
         file = await rename_file(file, sender)
         if msg.audio:
-            result = await app.send_audio(target_chat_id, file, caption = "Join-@skillwithgaurav"
+            result = await app.send_audio(target_chat_id, file, caption = "Join-@skillwithgaurav"caption, reply_to_message_id=topic_id)
             await result.copy(LOG_GROUP)
             await edit.delete(2)
             os.remove(file)
@@ -302,7 +302,7 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
             return
 
         if msg.photo:
-            result = await app.send_photo(target_chat_id, file, caption = "Join-@skillwithgaurav"
+            result = await app.send_photo(target_chat_id, file, caption = "Join-@skillwithgaurav"caption, reply_to_message_id=topic_id)
             await result.copy(LOG_GROUP)
             await edit.delete(2)
             os.remove(file)
@@ -372,15 +372,15 @@ def get_message_file_size(msg):
 async def get_final_caption(msg, sender):
     # Handle caption based on the upload method
     if msg.caption:
-        original_caption = "Join-@skillwithgaurav"
+        original_caption = "Join-@skillwithgaurav"msg.caption.markdown
     else:
         original_caption = "Join-@skillwithgaurav"
     
-    custom_caption = "Join-@skillwithgaurav"
-    final_caption = "Join-@skillwithgaurav"
+    custom_caption = "Join-@skillwithgaurav"get_user_caption_preference(sender)
+    final_caption = "Join-@skillwithgaurav"f"{original_caption}\n\n{custom_caption}" if custom_caption else original_caption
     replacements = load_replacement_words(sender)
     for word, replace_word in replacements.items():
-        final_caption = "Join-@skillwithgaurav"
+        final_caption = "Join-@skillwithgaurav"final_caption.replace(word, replace_word)
         
     return final_caption if final_caption else None
 
@@ -422,8 +422,8 @@ async def copy_message_with_chat_id(app, userbot, sender, chat_id, message_id, e
 
     try:
         msg = await app.get_messages(chat_id, message_id)
-        custom_caption = "Join-@skillwithgaurav"
-        final_caption = "Join-@skillwithgaurav"
+        custom_caption = "Join-@skillwithgaurav"get_user_caption_preference(sender)
+        final_caption = "Join-@skillwithgaurav"format_caption(msg.caption or '', sender, custom_caption)
 
         # Parse target_chat_id and topic_id
         topic_id = None
@@ -456,7 +456,7 @@ async def copy_message_with_chat_id(app, userbot, sender, chat_id, message_id, e
                 await app.send_message(target_chat_id, msg.text.markdown, reply_to_message_id=topic_id)
                 return
 
-            final_caption = "Join-@skillwithgaurav"
+            final_caption = "Join-@skillwithgaurav"format_caption(msg.caption.markdown if msg.caption else "", sender, custom_caption)
             file = await userbot.download_media(
                 msg,
                 progress=progress_bar,
@@ -465,7 +465,7 @@ async def copy_message_with_chat_id(app, userbot, sender, chat_id, message_id, e
             file = await rename_file(file, sender)
 
             if msg.photo:
-                result = await app.send_photo(target_chat_id, file, caption = "Join-@skillwithgaurav"
+                result = await app.send_photo(target_chat_id, file, caption = "Join-@skillwithgaurav"final_caption, reply_to_message_id=topic_id)
             elif msg.video or msg.document:
                 freecheck = await chk_user(chat_id, sender)
                 file_size = get_message_file_size(msg)
@@ -478,7 +478,7 @@ async def copy_message_with_chat_id(app, userbot, sender, chat_id, message_id, e
                     return
                 await upload_media(sender, target_chat_id, file, final_caption, edit, topic_id)
             elif msg.audio:
-                result = await app.send_audio(target_chat_id, file, caption = "Join-@skillwithgaurav"
+                result = await app.send_audio(target_chat_id, file, caption = "Join-@skillwithgaurav"final_caption, reply_to_message_id=topic_id)
             elif msg.voice:
                 result = await app.send_voice(target_chat_id, file, reply_to_message_id=topic_id)
             elif msg.sticker:
@@ -501,11 +501,11 @@ async def copy_message_with_chat_id(app, userbot, sender, chat_id, message_id, e
 async def send_media_message(app, target_chat_id, msg, caption, topic_id):
     try:
         if msg.video:
-            return await app.send_video(target_chat_id, msg.video.file_id, caption = "Join-@skillwithgaurav"
+            return await app.send_video(target_chat_id, msg.video.file_id, caption = "Join-@skillwithgaurav"caption, reply_to_message_id=topic_id)
         if msg.document:
-            return await app.send_document(target_chat_id, msg.document.file_id, caption = "Join-@skillwithgaurav"
+            return await app.send_document(target_chat_id, msg.document.file_id, caption = "Join-@skillwithgaurav"caption, reply_to_message_id=topic_id)
         if msg.photo:
-            return await app.send_photo(target_chat_id, msg.photo.file_id, caption = "Join-@skillwithgaurav"
+            return await app.send_photo(target_chat_id, msg.photo.file_id, caption = "Join-@skillwithgaurav"caption, reply_to_message_id=topic_id)
     except Exception as e:
         print(f"Error while sending media: {e}")
     
@@ -519,9 +519,9 @@ def format_caption(original_caption, sender, custom_caption):
 
     # Remove and replace words in the caption
     for word in delete_words:
-        original_caption = "Join-@skillwithgaurav"
+        original_caption = "Join-@skillwithgaurav"original_caption.replace(word, '  ')
     for word, replace_word in replacements.items():
-        original_caption = "Join-@skillwithgaurav"
+        original_caption = "Join-@skillwithgaurav"original_caption.replace(word, replace_word)
 
     # Append custom caption if available
     return f"{original_caption}\n\n__**{custom_caption}**__" if custom_caption else original_caption
@@ -620,7 +620,7 @@ async def send_settings_message(chat_id, user_id):
     await gf.send_file(
         chat_id,
         file=SET_PIC,
-        caption = "Join-@skillwithgaurav"
+        caption = "Join-@skillwithgaurav"MESS,
         buttons=buttons
     )
 
@@ -779,7 +779,7 @@ async def handle_user_input(event):
             await event.respond(f"Custom rename tag set to: {custom_rename_tag}")
         
         elif session_type == 'setcaption':
-            custom_caption = "Join-@skillwithgaurav"
+            custom_caption = "Join-@skillwithgaurav"event.text
             await set_caption_command(user_id, custom_caption)
             await event.respond(f"Custom caption set to: {custom_caption}")
 
@@ -861,7 +861,7 @@ async def handle_large_file(file, sender, edit, caption):
             dm = await pro.send_video(
                 LOG_GROUP,
                 video=file,
-                caption = "Join-@skillwithgaurav"
+                caption = "Join-@skillwithgaurav"caption,
                 thumb=thumb_path,
                 height=height,
                 width=width,
@@ -878,7 +878,7 @@ async def handle_large_file(file, sender, edit, caption):
             dm = await pro.send_document(
                 LOG_GROUP,
                 document=file,
-                caption = "Join-@skillwithgaurav"
+                caption = "Join-@skillwithgaurav"caption,
                 thumb=thumb_path,
                 progress=progress_bar,
                 progress_args=(
@@ -1127,8 +1127,8 @@ async def split_and_upload_file(app, sender, target_chat_id, file_path, caption,
 
             # Uploading part
             edit = await app.send_message(target_chat_id, f"⬆️ Uploading part {part_number + 1}...")
-            part_caption = "Join-@skillwithgaurav"
-            await app.send_document(target_chat_id, document=part_file, caption = "Join-@skillwithgaurav"
+            part_caption = "Join-@skillwithgaurav"f"{caption} \n\n**Part : {part_number + 1}**"
+            await app.send_document(target_chat_id, document=part_file, caption = "Join-@skillwithgaurav"part_caption, reply_to_message_id=topic_id,
                 progress=progress_bar,
                 progress_args=("╭─────────────────────╮\n│      **__Pyro Uploader__**\n├─────────────────────", edit, time.time())
             )
@@ -1139,3 +1139,4 @@ async def split_and_upload_file(app, sender, target_chat_id, file_path, caption,
 
     await start.delete()
     os.remove(file_path)
+
