@@ -374,7 +374,7 @@ async def get_final_caption(msg, sender):
     if msg.caption:
         original_caption = msg.caption.markdown
     else:
-        original_caption = "Join-@skillwithgaurav"
+        original_caption = ""
     
     custom_caption = get_user_caption_preference(sender)
     final_caption = f"{original_caption}\n\n{custom_caption}" if custom_caption else original_caption
