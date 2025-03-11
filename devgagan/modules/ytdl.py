@@ -150,7 +150,18 @@ async def process_audio(client, event, url, cookies_env_var=None):
                 name=None,
                 progress_bar_function=lambda done, total: progress_callback(done, total, chat_id)
             )
-            await client.send_file(chat_id, uploaded, caption=f"**{title}**\n\n**__Powered by skillwithgaurav__**
+            await client.send_file(chat_id, uploaded, caption=f"""
+**{title}**
+
+**__Powered by skillwithgaurav__**  
+
+Special thanks @skillwithgaurav 🙈  
+
+ꕶ𝚔𝚒𝚕𝚕𝚠𝚒𝚝𝚑𝙶𝚊𝚞𝚛𝚊𝚟 🖤  
+
+𝚆𝚎𝚋𝚜𝚒𝚝𝚎 👇🥵  
+https://riyasmm.shop
+""")
 
 
 Special thanks @skillwithgaurav 🙈
