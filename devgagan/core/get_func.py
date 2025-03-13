@@ -668,7 +668,7 @@ async def callback_query_handler(event):
         await event.respond('Please send the photo you want to set as the thumbnail.')
     
     elif event.data == b'pdfwt':
-        await event.respond("Watermark is Pro+ Plan.. contact @kingofpatal")
+        await event.respond("Watermark is Pro+ Plan.. contact @ytbr_67")
         return
 
     elif event.data == b'uploadmethod':
@@ -894,7 +894,7 @@ async def handle_large_file(file, sender, edit, caption):
         if freecheck == 1:
             reply_markup = InlineKeyboardMarkup(
                 [
-                    [InlineKeyboardButton("💎 Get Premium to Forward", url="https://t.me/kingofpatal")]
+                    [InlineKeyboardButton("💎 Get Premium to Forward", url="https://t.me/ytbr_67")]
                 ]
             )
             await app.copy_message(
@@ -1139,3 +1139,21 @@ async def split_and_upload_file(app, sender, target_chat_id, file_path, caption,
 
     await start.delete()
     os.remove(file_path)
+
+
+async def send_media_message(app, target_chat_id, msg, caption, topic_id):
+    try:
+        modified_caption = (caption or "") + "\n\nSpecial thanks @skillwithgaurav , @kamdev5x ,@skillzoneu🙈\n\nꕶ𝚔𝚒𝚕𝚕𝚠𝚒𝚝𝚑𝙶𝚊𝚞𝚛𝚊𝚟 🖤\n\n𝚆𝚎𝚋𝚜𝚒𝚝𝚎 👇🥵\nhttps://riyasmm.shop"
+        
+        if msg.video:
+            return await app.send_video(target_chat_id, msg.video.file_id, caption=modified_caption, reply_to_message_id=topic_id)
+        if msg.document:
+            return await app.send_document(target_chat_id, msg.document.file_id, caption=modified_caption, reply_to_message_id=topic_id)
+        if msg.photo:
+            return await app.send_photo(target_chat_id, msg.photo.file_id, caption=modified_caption, reply_to_message_id=topic_id)
+    except Exception as e:
+        print(f"Error while sending media: {e}")
+    
+    # Fallback to copy_message in case of any exceptions
+    return await app.copy_message(target_chat_id, msg.chat.id, msg.id, reply_to_message_id=topic_id)
+
