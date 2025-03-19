@@ -42,9 +42,10 @@ from mutagen.mp3 import MP3
 import subprocess
 
 def apply_text_watermark(input_video_path, output_video_path, watermark_text="Join @skillwithgaurav"):
+    # Using ffmpeg with adaptive safe margin for both landscape and portrait
     cmd = [
         "ffmpeg", "-i", input_video_path,
-        "-vf", f"drawtext=text='{watermark_text}':fontcolor=white:fontsize=24:x=(w-text_w)-20:y=(h-text_h)-20:box=1:boxcolor=black@0.5",
+        "-vf", f"drawtext=text='{watermark_text}':fontcolor=white:fontsize=24:x=w-tw-30:y=h-th-30:box=1:boxcolor=black@0.5:boxborderw=5:shadowcolor=black:shadowx=2:shadowy=2",
         "-codec:a", "copy", output_video_path
     ]
     subprocess.run(cmd, check=True)
@@ -366,7 +367,7 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
             return
          
         await asyncio.to_thread(download_video, url, ydl_opts)
-        # Watermark Integration after download
+        # Apply adaptive watermark after download
         watermarked_video_path = download_path.replace(".mp4", "_wm.mp4")
         await asyncio.to_thread(apply_text_watermark, upload_path, watermarked_video_path)
         upload_path = watermarked_video_path
