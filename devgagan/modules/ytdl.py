@@ -126,7 +126,7 @@ async def process_audio(client, event, url, cookies_env_var=None):
          
         if os.path.exists(upload_path):
             def edit_metadata():
-                audio_file = MP3(download_path, ID3=ID3)
+                audio_file = MP3(upload_path, ID3=ID3)
                 try:
                     audio_file.add_tags()
                 except Exception:
@@ -156,7 +156,7 @@ async def process_audio(client, event, url, cookies_env_var=None):
             await progress_message.delete()
             prog = await client.send_message(chat_id, "**__Starting Upload...__**")
             uploaded = await fast_upload(
-                client, download_path, 
+                client, upload_path, 
                 reply=prog, 
                 name=None,
                 progress_bar_function=lambda done, total: progress_callback(done, total, chat_id)
@@ -352,7 +352,7 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
  
      
     ydl_opts = {
-        'outtmpl': download_path,
+        'outtmpl': upload_path,
         'format': 'best',
         'cookiefile': temp_cookie_path if temp_cookie_path else None,
         'writethumbnail': True,
@@ -369,12 +369,10 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
         await asyncio.to_thread(download_video, url, ydl_opts)
         title = info_dict.get('title', 'Powered by Team SPY')
         k = video_metadata(download_path)
-
-        # Apply watermark after download
+        # Apply watermark after video download
         watermarked_video_path = download_path.replace(".mp4", "_wm.mp4")
-        await asyncio.to_thread(apply_text_watermark, download_path, watermarked_video_path)
-        upload_path = watermarked_video_path if os.path.exists(watermarked_video_path) else download_path
-      
+        await asyncio.to_thread(apply_text_watermark, upload_path, watermarked_video_path)
+        upload_path = watermarked_video_path if os.path.exists(watermarked_video_path) else download_path      
         W = k['width']
         H = k['height']
         D = k['duration']
@@ -394,7 +392,7 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
         if thumbnail_file:
             THUMB = thumbnail_file
         else:
-            THUMB = await screenshot(download_path, metadata['duration'], event.sender_id)
+            THUMB = await screenshot(upload_path, metadata['duration'], event.sender_id)
  
          
  
@@ -405,14 +403,14 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
      
         if os.path.exists(upload_path) and os.path.getsize(download_path) > SIZE:
             prog = await client.send_message(chat_id, "**__Starting Upload...__**")
-            await split_and_upload_file(app, chat_id, download_path, caption)
+            await split_and_upload_file(app, chat_id, upload_path, caption)
             await prog.delete()
          
         if os.path.exists(upload_path):
             await progress_message.delete()
             prog = await client.send_message(chat_id, "**__Starting Upload...__**")
             uploaded = await fast_upload(
-                client, download_path,
+                client, upload_path,
                 reply=prog,
                 progress_bar_function=lambda done, total: progress_callback(done, total, chat_id)
             )
