@@ -38,6 +38,17 @@ import logging
 import aiofiles
 from mutagen.id3 import ID3, TIT2, TPE1, COMM, APIC
 from mutagen.mp3 import MP3
+
+import subprocess
+
+def apply_text_watermark(input_video_path, output_video_path, watermark_text="Join @skillwithgaurav"):
+    cmd = [
+        "ffmpeg", "-i", input_video_path,
+        "-vf", f"drawtext=text='{watermark_text}':fontcolor=white:fontsize=24:x=(w-text_w)-20:y=(h-text_h)-20:box=1:boxcolor=black@0.5",
+        "-codec:a", "copy", output_video_path
+    ]
+    subprocess.run(cmd, check=True)
+
  
 logger = logging.getLogger(__name__)
  
@@ -113,7 +124,7 @@ async def process_audio(client, event, url, cookies_env_var=None):
         await progress_message.edit("**__Editing metadata...__**")
  
          
-        if os.path.exists(download_path):
+        if os.path.exists(upload_path):
             def edit_metadata():
                 audio_file = MP3(download_path, ID3=ID3)
                 try:
@@ -141,7 +152,7 @@ async def process_audio(client, event, url, cookies_env_var=None):
  
          
         chat_id = event.chat_id
-        if os.path.exists(download_path):
+        if os.path.exists(upload_path):
             await progress_message.delete()
             prog = await client.send_message(chat_id, "**__Starting Upload...__**")
             uploaded = await fast_upload(
@@ -160,8 +171,9 @@ async def process_audio(client, event, url, cookies_env_var=None):
         logger.exception("Error during audio extraction or upload")
         await event.reply(f"**__An error occurred: {e}__**")
     finally:
-        if os.path.exists(download_path):
+        if os.path.exists(upload_path):
             os.remove(download_path)
+        if os.path.exists(watermarked_video_path): os.remove(watermarked_video_path)
         if temp_cookie_path and os.path.exists(temp_cookie_path):
             os.remove(temp_cookie_path)
  
@@ -356,7 +368,13 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
          
         await asyncio.to_thread(download_video, url, ydl_opts)
         title = info_dict.get('title', 'Powered by Team SPY')
-        k = video_metadata(download_path)      
+        k = video_metadata(download_path)
+
+        # Apply watermark after download
+        watermarked_video_path = download_path.replace(".mp4", "_wm.mp4")
+        await asyncio.to_thread(apply_text_watermark, download_path, watermarked_video_path)
+        upload_path = watermarked_video_path if os.path.exists(watermarked_video_path) else download_path
+      
         W = k['width']
         H = k['height']
         D = k['duration']
@@ -385,12 +403,12 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
         SIZE = 2 * 1024 * 1024
         caption = f"{title}"
      
-        if os.path.exists(download_path) and os.path.getsize(download_path) > SIZE:
+        if os.path.exists(upload_path) and os.path.getsize(download_path) > SIZE:
             prog = await client.send_message(chat_id, "**__Starting Upload...__**")
             await split_and_upload_file(app, chat_id, download_path, caption)
             await prog.delete()
          
-        if os.path.exists(download_path):
+        if os.path.exists(upload_path):
             await progress_message.delete()
             prog = await client.send_message(chat_id, "**__Starting Upload...__**")
             uploaded = await fast_upload(
@@ -421,8 +439,9 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
         await event.reply(f"**__An error occurred: {e}__**")
     finally:
          
-        if os.path.exists(download_path):
+        if os.path.exists(upload_path):
             os.remove(download_path)
+        if os.path.exists(watermarked_video_path): os.remove(watermarked_video_path)
         if temp_cookie_path and os.path.exists(temp_cookie_path):
             os.remove(temp_cookie_path)
         if thumbnail_file and os.path.exists(thumbnail_file):
