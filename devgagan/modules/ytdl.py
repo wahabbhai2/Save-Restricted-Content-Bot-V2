@@ -172,8 +172,7 @@ async def process_audio(client, event, url, cookies_env_var=None):
         await event.reply(f"**__An error occurred: {e}__**")
     finally:
         if os.path.exists(upload_path):
-            os.remove(download_path)
-        if os.path.exists(watermarked_video_path): os.remove(watermarked_video_path)
+            os.remove(upload_path)
         if temp_cookie_path and os.path.exists(temp_cookie_path):
             os.remove(temp_cookie_path)
  
@@ -367,12 +366,12 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
             return
          
         await asyncio.to_thread(download_video, url, ydl_opts)
-        title = info_dict.get('title', 'Powered by Team SPY')
-        k = video_metadata(download_path)
-        # Apply watermark after video download
+        # Watermark Integration after download
         watermarked_video_path = download_path.replace(".mp4", "_wm.mp4")
         await asyncio.to_thread(apply_text_watermark, upload_path, watermarked_video_path)
-        upload_path = watermarked_video_path if os.path.exists(watermarked_video_path) else download_path      
+        upload_path = watermarked_video_path
+        title = info_dict.get('title', 'Powered by Team SPY')
+        k = video_metadata(upload_path)      
         W = k['width']
         H = k['height']
         D = k['duration']
@@ -401,7 +400,7 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
         SIZE = 2 * 1024 * 1024
         caption = f"{title}"
      
-        if os.path.exists(upload_path) and os.path.getsize(download_path) > SIZE:
+        if os.path.exists(upload_path) and os.path.getsize(upload_path) > SIZE:
             prog = await client.send_message(chat_id, "**__Starting Upload...__**")
             await split_and_upload_file(app, chat_id, upload_path, caption)
             await prog.delete()
@@ -438,8 +437,7 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
     finally:
          
         if os.path.exists(upload_path):
-            os.remove(download_path)
-        if os.path.exists(watermarked_video_path): os.remove(watermarked_video_path)
+            os.remove(upload_path)
         if temp_cookie_path and os.path.exists(temp_cookie_path):
             os.remove(temp_cookie_path)
         if thumbnail_file and os.path.exists(thumbnail_file):
