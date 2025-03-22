@@ -1,18 +1,21 @@
 from datetime import datetime, timedelta
-from devgagan.core.mongo.db import db as odb
-from pyrogram import filters
 from devgagan import app
+from pyrogram import filters
+from devgagan.core.mongo.db import db as odb
 
+# Auto Premium Logic Injected Correctly
 @app.on_message(filters.command("start"))
-async def start_command(client, message):
+async def start(client, message):
     user_id = message.from_user.id
-    expiry_date = datetime.utcnow() + timedelta(days=30)
+    expiry = datetime.utcnow() + timedelta(days=30)
+    
     await odb.update_one(
-        {"_id": user_id},
-        {"$set": {"premium": True, "premium_expiry": expiry_date}},
+        {"user_id": user_id},
+        {"$set": {"premium": True, "premium_expiry": expiry}},
         upsert=True
     )
-    await message.reply_text("🎉 Congratulations! You've got **1 Month Premium Access** ✅")
+    await message.reply_text("🎉 1 Month Premium Activated Successfully ✅")
+
 
 # ---------------------------------------------------
 # File Name: start.py
