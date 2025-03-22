@@ -1143,7 +1143,7 @@ async def split_and_upload_file(app, sender, target_chat_id, file_path, caption,
 
 async def send_media_message(app, target_chat_id, msg, caption, topic_id):
     try:
-        modified_caption = (caption or "") + "\n\nSpecial thanks @skillwithgaurav , @kamdev5x ,@skillzoneu🙈\n\nꕶ𝚔𝚒𝚕𝚕𝚠𝚒𝚝𝚑𝙶𝚊𝚞𝚛𝚊𝚟 🖤\n\n𝚆𝚎𝚋𝚜𝚒𝚝𝚎 👇🥵\nhttps://riyasmm.shop"
+        modified_caption = (caption or "")
         
         if msg.video:
             return await app.send_video(target_chat_id, msg.video.file_id, caption=modified_caption, reply_to_message_id=topic_id)
