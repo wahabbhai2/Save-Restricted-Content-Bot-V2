@@ -1,3 +1,19 @@
+from datetime import datetime, timedelta
+from devgagan.core.mongo.db import db as odb
+from pyrogram import filters
+from devgagan import app
+
+@app.on_message(filters.command("start"))
+async def start_command(client, message):
+    user_id = message.from_user.id
+    expiry_date = datetime.utcnow() + timedelta(days=30)
+    await odb.update_one(
+        {"_id": user_id},
+        {"$set": {"premium": True, "premium_expiry": expiry_date}},
+        upsert=True
+    )
+    await message.reply_text("🎉 Congratulations! You've got **1 Month Premium Access** ✅")
+
 # ---------------------------------------------------
 # File Name: start.py
 # Description: A Pyrogram bot for downloading files from Telegram channels or groups 
