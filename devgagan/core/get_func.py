@@ -378,11 +378,10 @@ async def get_final_caption(msg, sender):
     
     custom_caption = get_user_caption_preference(sender)
     final_caption = f"{original_caption}\n\n{custom_caption}" if custom_caption else original_caption
-    final_caption += "
-
-╭═━┈💀┈━═╮
+    final_caption += "\n
+\n╭═━┈💀┈━═╮
 ┃ 𝐄𝐗𝐓𝐑𝐀𝐂𝐓𝐄𝐃 𝐁𝐘 ┃
-┃ ❤️@skillwithgaurav 🇮🇳 ┃
+┃ ❤️@skillwithgaurav 🇮🇳 ┃\n
 ╰═━┈💀┈━═╯"
     replacements = load_replacement_words(sender)
     for word, replace_word in replacements.items():
