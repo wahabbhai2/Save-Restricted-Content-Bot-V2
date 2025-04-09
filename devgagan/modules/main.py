@@ -44,7 +44,7 @@ async def process_and_upload_link(userbot, user_id, msg_id, link, retry_count, m
             await app.delete_messages(user_id, msg_id)
         except Exception:
             pass
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(3)
     finally:
         pass
 
