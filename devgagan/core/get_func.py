@@ -143,7 +143,8 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
                 gf, file,
                 reply=progress_message,
                 name=None,
-                progress_bar_function=lambda done, total: progress_callback(done, total, sender)
+                progress_bar_function=lambda done, total: progress_callback(done, total, sender),
+                user_id=sender
             )
             await progress_message.delete()
 
@@ -162,6 +163,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
                 caption=caption,
                 attributes=attributes,
                 reply_to=topic_id,
+                parse_mode='html',
                 thumb=thumb_path
             )
             await gf.send_file(
@@ -169,6 +171,7 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
                 uploaded,
                 caption=caption,
                 attributes=attributes,
+                parse_mode='html',
                 thumb=thumb_path
             )
 
@@ -178,7 +181,8 @@ async def upload_media(sender, target_chat_id, file, caption, edit, topic_id):
 
     finally:
         if thumb_path and os.path.exists(thumb_path):
-            os.remove(thumb_path)
+            if os.path.basename(thumb_path) != f"{sender}.jpg":  # Check if the filename is not {sender}.jpg
+                os.remove(thumb_path)
         gc.collect()
 
 
@@ -204,7 +208,7 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
             if chat in saved_channel_ids:
                 await app.edit_message_text(
                     message.chat.id, edit_id,
-                    "Sorry! This channel is protected by **__Gaurav Rajput__**."
+                    "Sorry! This channel is protected by **__Team SPY__**."
                 )
                 return
             
@@ -378,7 +382,6 @@ async def get_final_caption(msg, sender):
     
     custom_caption = get_user_caption_preference(sender)
     final_caption = f"{original_caption}\n\n{custom_caption}" if custom_caption else original_caption
-    final_caption += "\n╭═━┈💀┈━═╮\n┃ 𝐄𝐗𝐓𝐑𝐀𝐂𝐓𝐄𝐃 𝐁𝐘 ┃\n┃ ❤️@skillwithgaurav 🇮🇳 ┃\n╰═━┈💀┈━═╯"
     replacements = load_replacement_words(sender)
     for word, replace_word in replacements.items():
         final_caption = final_caption.replace(word, replace_word)
@@ -615,7 +618,7 @@ async def send_settings_message(chat_id, user_id):
         [Button.inline("Set Thumbnail", b'setthumb'), Button.inline("Remove Thumbnail", b'remthumb')],
         [Button.inline("PDF Wtmrk", b'pdfwt'), Button.inline("Video Wtmrk", b'watermark')],
         [Button.inline("Upload Method", b'uploadmethod')],  # Include the dynamic Fast DL button
-        [Button.url("Report Errors", "https://t.me/team_spy_pro")]
+        [Button.url("Report Errors", "https://t.me/ytbr_67")]
     ]
 
     await gf.send_file(
@@ -669,7 +672,7 @@ async def callback_query_handler(event):
         await event.respond('Please send the photo you want to set as the thumbnail.')
     
     elif event.data == b'pdfwt':
-        await event.respond("Watermark is Pro+ Plan.. contact @ytbr_67")
+        await event.respond("This feature is not available yet in public repo...")
         return
 
     elif event.data == b'uploadmethod':
@@ -1140,21 +1143,3 @@ async def split_and_upload_file(app, sender, target_chat_id, file_path, caption,
 
     await start.delete()
     os.remove(file_path)
-
-
-async def send_media_message(app, target_chat_id, msg, caption, topic_id):
-    try:
-        modified_caption = (caption or "")
-        
-        if msg.video:
-            return await app.send_video(target_chat_id, msg.video.file_id, caption=modified_caption, reply_to_message_id=topic_id)
-        if msg.document:
-            return await app.send_document(target_chat_id, msg.document.file_id, caption=modified_caption, reply_to_message_id=topic_id)
-        if msg.photo:
-            return await app.send_photo(target_chat_id, msg.photo.file_id, caption=modified_caption, reply_to_message_id=topic_id)
-    except Exception as e:
-        print(f"Error while sending media: {e}")
-    
-    # Fallback to copy_message in case of any exceptions
-    return await app.copy_message(target_chat_id, msg.chat.id, msg.id, reply_to_message_id=topic_id)
-
